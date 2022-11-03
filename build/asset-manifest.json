@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.62873732.css",
+    "main.js": "/static/js/main.228fbe00.js",
+    "static/media/talk-to-experts-graphic.svg": "/static/media/talk-to-experts-graphic.dcc29733c2f6edee1c994e882dbf1504.svg",
+    "static/media/while_black.png": "/static/media/while_black.686627319da24f9cd0f5.png",
+    "static/media/money.png": "/static/media/money.8d05e5cff4ff1a51c11a.png",
+    "static/media/getBack.png": "/static/media/getBack.ed937f881d00595ea659.png",
+    "static/media/donation.png": "/static/media/donation.1cdb7627e3ed866b05e0.png",
+    "static/media/digital-wallet.png": "/static/media/digital-wallet.bf276927f1360390b621.png",
+    "static/media/unifmrity.png": "/static/media/unifmrity.ef5672156bfcc49794ef.png",
+    "static/media/web-design.png": "/static/media/web-design.4662c816e585d146a7c2.png",
+    "static/media/heart.png": "/static/media/heart.556c78a5a9b89d6b2eeb.png",
+    "index.html": "/index.html",
+    "static/media/rupee.svg": "/static/media/rupee.becf75588e4a6d4cd536c585df3ffdfa.svg",
+    "main.62873732.css.map": "/static/css/main.62873732.css.map",
+    "main.228fbe00.js.map": "/static/js/main.228fbe00.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.62873732.css",
+    "static/js/main.228fbe00.js"
+  ]
+}
