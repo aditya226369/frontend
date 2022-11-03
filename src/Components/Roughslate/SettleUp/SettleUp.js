@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import {makeStyles} from '@material-ui/core/Styles';
+import {makeStyles} from '@material-ui/core/styles';
 import {TextField} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';

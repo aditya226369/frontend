@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {url} from '../Globals/constants';
 import React from "react";
-import Button from "@material-ui/core/button";
+import Button from "@material-ui/core/Button";
 import Logo from "../Img/black_white_logo.png";
 
 function Error() {
