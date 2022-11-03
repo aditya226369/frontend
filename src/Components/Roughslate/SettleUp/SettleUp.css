@@ -1,0 +1,19 @@
+.modal_nav{
+    background-color: #3F51B5;
+    color:white;
+    padding: 10px;
+}
+
+.nav__text{
+    text-align: center;
+}
+
+.content_text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.description_block{
+    display: flex;
+}

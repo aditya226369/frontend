@@ -1,0 +1,25 @@
+.modal_nav{
+    background-color: #3F51B5;
+    color:white;
+    padding: 10px;
+}
+
+.nav__text{
+    text-align: center;
+}
+
+.content_text{
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+.group_name{
+    font-size: 1rem !important;
+    border: 1px solid grey;
+    box-shadow: 0 0 1rem lightblue;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+.description_block{
+    display: flex;
+}

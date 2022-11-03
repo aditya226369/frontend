@@ -1,0 +1,33 @@
+.modal_nav{
+    background-color: #3F51B5;
+    color:white;
+    padding: 10px;
+}
+
+.nav__text{
+    text-align: center;
+}
+.paper_chip{
+    cursor: pointer;
+    padding: 0.5rem;
+}
+.add_root{
+    padding: 1rem;
+}
+.chip{
+    background-color: #3F51B5;
+    color: red;
+}
+.content_text{
+    display: flex;
+    align-items: center;
+    gap:1rem;
+}
+.addgroup_group{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.description_block{
+    display: flex;
+}

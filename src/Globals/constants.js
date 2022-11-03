@@ -1,0 +1,1 @@
+export const url = 'https://billsplit-finance.onrender.com';

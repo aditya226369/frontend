@@ -1,0 +1,55 @@
+
+.MuiPaper_main{
+    display: grid;
+    padding: 0.5rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 'icon content content';
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.479);
+    cursor: pointer;
+}
+.icon{
+    grid-area: icon;
+    display: flex;
+    justify-content: center;
+}
+.content{
+    grid-area: content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.amount_content_text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.title{
+    grid-area: title;
+}
+.symbol{
+    grid-area: symbol;
+}
+
+.MuiPaper_icon{
+    width: 50%;
+    height: 50%;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+.MuiPaper_rupee{
+    height: 1.5rem;
+    margin-right: 0.5rem;
+}
+.MuiTypography_root_text{
+    font-size: 1.2rem !important;
+    text-align: center;
+}
+.MuiTypography_amount{
+    font-family: 'Roboto Mono', monospace !important;
+    font-size: 30px !important;
+}
+@media (max-width:500px) {
+    
+}
+

@@ -1,0 +1,127 @@
+.Textfield{
+    box-shadow: 0 0 0.2 blue !important;
+}
+.btn{
+    background-color: #0277BD !important;
+    width: 100%;
+    color: white !important;
+}
+.btn:hover{
+    background-color: #01579b !important;
+    color: white;
+}
+.modal_nav{
+    background-color: #3F51B5 !important;
+    color:white;
+    text-align: center;
+    padding: 10px;
+}
+.nav__text{
+    text-align: center;
+}
+.dialog{
+    display: flex;
+    align-items: center;
+}
+.container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.content_text{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.image_text{
+    display: flex;
+    justify-content: center;
+}
+.table_div{
+    width: 100%;
+}
+.table{
+    width: 100%;
+}
+td{
+    padding: .2rem;
+}
+.table_td{
+    text-align: center;
+}
+.amount_text{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+.input_image{
+    width: 10%;
+}
+.block{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 0 0.3rem black;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+.block_div{
+    width: 100%;
+}
+.block_table{
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.split_title{
+    text-align: center;
+    padding: 1rem;
+    font-weight: bold;
+}
+.members_content{
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+}
+.input_amount{
+    width:5rem;
+    padding: 0.2rem;
+}
+.split_content{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.choose_content{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+.group_content{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.paidby_content{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.description_block{
+    display: flex;
+}
+@media (max-width:900px) {
+    .MuiButton{
+        padding: 7px 9px;
+        font-size: 0.6rem;
+    }
+}
