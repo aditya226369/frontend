@@ -20,10 +20,10 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TransactionCard from '../TransactionCard/TransactionCard';
-import SimplifyCard from '../Charts/SimplifyCard';
+import SimplifyCard from './Charts/SimplifyCard';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import '../../Styles/Color.css';
-import  '../Roughslate/Roughslate.css';
+import  './Roughslate.css';
 import Logo from '../../Img/black_white_logo.png';
 import AddExpense from './AddExpense/AddExpense';
 import SettleUp from './SettleUp/SettleUp';
@@ -157,7 +157,12 @@ export default function Roughslate() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
-  const [members,setMembers] = React.useState([]);
+  const [groupMembers,setGroupMembers] = React.useState([]);
+  const [transaction,setTransaction] = React.useState({
+    simplified:0,
+    showAmount:[[0,0]],
+    transactions:[]
+  });
   const [isId, setId] = React.useState([
     {
       "name":"Rough",
@@ -195,14 +200,14 @@ export default function Roughslate() {
   },[]);
 
   const deleteMembers=(text)=>{
-    const newMembers = members.filter((item)=>item!==text);
+    const newMembers = groupMembers.filter((item)=>item!==text);
     console.log(newMembers);
-    setMembers(newMembers);
+    setGroupMembers(newMembers);
   }
 
   const addMembers=(arr)=>{
-    const newmembers = [...members,...arr];
-    setMembers(newmembers);
+    const newmembers = [...groupMembers,...arr];
+    setGroupMembers(newmembers);
   }
 
 
@@ -319,9 +324,9 @@ export default function Roughslate() {
           </IconButton>
           <div><img src={Logo} alt="logo" className={classes.sideLogo} /></div>
         </div>
-        <div className="drawer_collection"><div>Friends</div><div className="drawer_add" style={{cursor:"pointer"}}><AddFriend members={addMembers} group={isId[0]}/></div></div>
+        <div className="drawer_collection"><div>Friends</div><div className="drawer_add" style={{cursor:"pointer"}}><AddFriend groupMembers={addMembers}/></div></div>
         <List>
-          {members.map((text, index) => (
+          {groupMembers?.map((text, index) => (
             <ListItem key={index} onClick={()=>console.log(text)}>
               <ListItemIcon><PersonRoundedIcon/></ListItemIcon>
               <ListItemText primary={text} />
@@ -352,15 +357,15 @@ export default function Roughslate() {
                   </div>
                   <div className="control_btn">
                         <div className="inner_box_control_btn">
-                            <AddExpense className={classes.addexpense} members={members} props={isId[0].name==="group" ? groupList : isId[0]}/>
+                            <AddExpense className={classes.addexpense} groupMembers={groupMembers} transaction={transaction}/>
                         </div>
                         <div className="inner_box_control_btn ">
-                            <SettleUp className="settleup" members={members}/>
+                            <SettleUp className="settleup" groupMembers={groupMembers}/>
                         </div>
                   </div>
           </div>
           <div className="chart">
-              <SimplifyCard props={isId[0].simplified}/>
+              <SimplifyCard groupMembers={groupMembers} transaction={transaction}/>
           </div>
           <div className="information_card">
             <Accordion id="accordion" expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
@@ -376,7 +381,7 @@ export default function Roughslate() {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <TransactionCard/>
+                <TransactionCard transaction={transaction} groupMembers={groupMembers}/>
               </AccordionDetails>
             </Accordion>
           </div>

@@ -11,8 +11,6 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
 function TransactionCard({ transaction,groupMembers }) {
   const [data, setData] = useState();
-  transaction = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  const date = new Date();
   return (
     <div className={classes.transaction_container}>
       <Table style={{ width: "100%" }}>
@@ -26,7 +24,7 @@ function TransactionCard({ transaction,groupMembers }) {
             {/* <TableCell>UPDATE</TableCell> */}
         </TableRow>
         <TableBody>
-          {transaction.transactions?.map((item, index) => {
+          {(transaction.transactions).length > 0 && transaction.transactions.map((item, index) => {
             console.log(item);
             const toArr=[];
             for(let i=0;i<item.fromTo[1].length;i++){

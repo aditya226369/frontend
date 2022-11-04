@@ -1,0 +1,30 @@
+:root{
+    --appbar-height: 4.5rem;
+    --fs-small: 1rem;
+    --fs-medius: 1.5rem;
+    --fs-large: 3rem;
+    --fs-xlarge: 4rem;
+    --primary: #0277bd;
+    --secondary: #F64C71;
+    --lightprimary: #039be5;
+}
+
+.board_title{
+    position: sticky;
+    background-color: var(--lightprimary);
+    color:white;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    font-size: medium;
+    box-shadow: 0 0 0.2rem black;
+}
+.board_content{
+    box-shadow: none;
+}
+.board_item{
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid grey;
+}

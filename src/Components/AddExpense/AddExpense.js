@@ -9,6 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import CreateIcon from '@material-ui/icons/Create';
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import classes from "./AddExpense.module.css";
@@ -22,10 +23,11 @@ export default function AddExpense({props,members,roughslate}) {
   });
   const [amount, setAmount] = React.useState();
   const [expenseData , setexpenseData]  = useState([{
-    "description":"",
-    "amount":0,
-    "paidby":[],
-    "split":[]
+    description:"",
+    amount:0,
+    label:'Food',
+    date:'',
+    fromTo:0
   }]);
 
 
@@ -51,11 +53,18 @@ export default function AddExpense({props,members,roughslate}) {
   const handleAmount = (e)=>{
     e.preventDefault();
     const amt = e.target.value;
-    setAmount(amt);
+    const regex = /^[0-9-+/*]*$/;
+    const data = regex.test(amt);
+    if(data){
+      setAmount(amt);
+    }
+  }
+  function evil(fn) {
+    return new Function('return ' + fn)();
   }
   const handleCal=(e)=>{
     e.preventDefault();
-    setAmount(eval(amount));
+    setAmount(evil(amount));
   }
   const handleChangeCal=(e)=>{
     e.preventDefault();
@@ -87,7 +96,7 @@ export default function AddExpense({props,members,roughslate}) {
         </DialogTitle>
         <DialogContent className={classes.dialog} style={{overflowY:"visible"}}>
           <DialogContentText>
-            <div className={classes.content_text}>
+          <div className={classes.content_text}>
             <Box
                 sx={{
                   marginTop: 8,
@@ -100,157 +109,150 @@ export default function AddExpense({props,members,roughslate}) {
                   component="form"
                   sx={{ mt: 3 }}
                 >
-                  <Grid container spacing={2} className={classes.container}>
-                  {!roughslate && <Grid item xs={12} sm={12} className={classes.choose_content}>
-                    <div className={classes.group_content}>
-                    <span>Inside*</span>
-                          <Select
-                          style={{width:'fit-content'}}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={expenseData.paidby}
-                            onChange={handleChange}
-                            variant="outlined"
-                            required
-                          >
-                            <MenuItem value={"id1"}>Group1</MenuItem>
-                            <MenuItem value={"id2"}>Group2</MenuItem>
-                            <MenuItem value={"id3"}>Group3</MenuItem>
-                          </Select>
-                    </div>
-                  </Grid>}
-                    <Grid item xs={12} sm={12} className={classes.image_text}>
-                    <TextField
+                <div className={classes.table_div}>
+                <table className={classes.table}>
+                <tr>
+                  <td>Label</td>
+                  <td>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={expenseData.label}
+                        variant="outlined"
+                        IconComponent={CreateIcon}
+                        fullWidth
+                    >
+                        <MenuItem value={"Food"}>Food</MenuItem>
+                        <MenuItem value={"Groccery"}>Groccery</MenuItem>
+                        <MenuItem value={"Electric"}>Electric</MenuItem>
+                        <MenuItem value={"Trip"}>Trip</MenuItem>
+                        <MenuItem value={"Petrol"}>Petrol</MenuItem>
+                    </Select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Amount</td>
+                  <td>
+                  <TextField
                         required
                         fullWidth
-                        id="description"
-                        name="description"
-                        type="text"
-                        label="Description"
-                        variant="outlined"
-                        autoComplete="description"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} className={classes.choose_content}>
-                    <div className={classes.group_content}>
-                      <InputLabel id="demo-simple-select-outlined-label">Label</InputLabel>
-                          <Select
-                          style={{width:"5rem"}}  labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value={expenseData.paidby}
-                            label="label"
-                            onChange={handleChange}
-                          >
-                            <MenuItem value={"id1"}>Label1</MenuItem>
-                            <MenuItem value={"id2"}>Label2</MenuItem>
-                            <MenuItem value={"id3"}>Label2</MenuItem>
-                          </Select>
-                    </div>
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
-                    <div className={classes.amount_text}>
-                      <TextField
-                        required
                         name="amount"
-                        label="Amount"
                         type="text"
-                        value={amount}
+                        value={expenseData.amount}
                         onChange={handleAmount}
+                        onBlur={handleCal}
                         InputProps={{ inputProps: { min: 1 } }}
                         id="quantity"
                         variant="outlined"
                         autoComplete="amount"
                       />
-                      <Button variant="contained" onClick={handleCal}>=</Button>
-                    </div>
-                    </Grid>
-                    <Grid item xs={12} sm={12} container className={classes.choose_content}>
-                      <div className={classes.paidby_content}>
-                          <span>Paid By</span>
-                          <Select
-                          style={{width:"5rem"}}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={expenseData.paidby}
-                            label="choose"
-                            onChange={handleChange}
-                          >
-                            <MenuItem value={"id1"}>Daman</MenuItem>
-                            <MenuItem value={"id2"}>Dipak</MenuItem>
-                            <MenuItem value={"id3"}>Durgesh</MenuItem>
-                          </Select>
-                        </div>
-                        <div className={classes.paidby_content}>
-                          <span>Split</span>
-                          <Select
-                          style={{width:"fit-content"}}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={expenseData.paidby}
-                            label="choose"
-                            onChange={handleChangeCal}
-                          >
-                            <MenuItem value={"equal"}>EQUAL</MenuItem>
-                            <MenuItem value={"unequal"}>UNEQUAL</MenuItem>
-                            <MenuItem value={"percentage"}>PERCENTAGE</MenuItem>
-                          </Select>
-                        </div>
-                    </Grid>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Paid By</td>
+                  <td>
+                    <Select
+                        fullWidth
+                        variant="outlined"
+                        IconComponent={CreateIcon}
+                      >
+                      {members.map((item,index)=>{
+                        return(
+                        <MenuItem key={index} value={item}>{item}</MenuItem>
+                        )
+                      })}
+                    </Select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Split</td>
+                  <td>
+                    <Select
+                      fullWidth
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={split}
+                      variant="outlined"
+                      onChange={handleChangeCal}
+                      IconComponent={CreateIcon}
+                    >
+                      <MenuItem value={"equal"}>EQUAL</MenuItem>
+                      <MenuItem value={"unequal"}>UNEQUAL</MenuItem>
+                      <MenuItem value={"percentage"}>PERCENTAGE</MenuItem>
+                    </Select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Description</td>
+                  <td>
+                    <TextField
+                        className={classes.Textfield}
+                        required
+                        fullWidth
+                        id="description"
+                        name="description"
+                        type="text"
+                        variant="outlined"
+                        autoComplete="description"
+                      />
+                  </td>
+                </tr>
+                </table>
+                  <div className={classes.container}>
                     {/* unequal block */}
-                    {split.stype === "unequal" ? <Grid item xs={12} sm={12} container className={classes.block}>
-                      <div style={{width:'100%'}}>
-                      <table style={{width:"100%",padding:"1px"}}>
-                        {split.members.map((item,index)=>{
-                          return(
-                            <tr key={index}>
-                              <td style={{textAlign:"center"}}>{item}</td>
-                              <td style={{textAlign:"center"}}>
-                                <span>Rs.<input className={classes.input_amount} type="number" /></span>
-                              </td>
-                          </tr>
-                          )
-                        })}
-                        </table>
-                      </div>
-                      <Grid item xs={12} sm={12}>
-                        <div style={{textAlign:"center"}}>
-                          <p>Rs.total of Rs.amount</p>
-                          <p>Rs.left left</p>
+                    {split === "unequal" ? 
+                      <div className={classes.block}>
+                        <div className={classes.block_div}>
+                          <table className={classes.block_table}>
+                            {members.map((item,index)=>{
+                              return(
+                                <tr key={index}>
+                                  <td className={classes.table_td}>{item}</td>
+                                  <td className={classes.table_td}>
+                                    <span>Rs.
+                                    <span><input  name={index}  className={classes.input_amount} type="number" /></span>
+                                    </span>
+                                  </td>
+                              </tr>
+                              )
+                            })}
+                          </table>
                         </div>
-                      </Grid>
-                    </Grid> : false}
+                        <div style={{textAlign:"center"}}>
+                          <p>Rs.{amount} of Rs.{amount}</p>
+                          <p>Rs.{amount-amount} left</p>
+                        </div>
+                      </div> : false}
                     {/* ends here */}
 
                     {/* percentage block */}
-                    {split.stype === "percentage" ? <Grid item xs={12} sm={12} container className={classes.block}>
-                      <div style={{width:'100%'}}>
-                      <table style={{width:"100%",padding:"1px"}}>
-                        {split.members[1].map((item,index)=>{
-                          return(
-                            <tr key={index}>
-                              <td style={{textAlign:"center"}}>{item}</td>
-                              <td style={{textAlign:"center"}}>
-                                <span><input className={classes.input_amount} type="number" />%</span>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                        </table>
-                      </div>
-                      <Grid item xs={12} sm={12}>
-                        <div style={{textAlign:"center"}}>
-                          <p>total % of 100%</p>
-                          <p>left% left</p>
+                    {split === "percentage" ? 
+                      <div className={classes.block}>
+                        <div style={{width:'100%'}}>
+                          <table style={{width:"100%",padding:"1px"}}>
+                            {members.map((item,index)=>{
+                              return(
+                                <tr key={index}>
+                                  <td style={{textAlign:"center"}}>{item}</td>
+                                  <td style={{textAlign:"center"}}>
+                                    <span><input className={classes.input_amount} type="number" />%</span>
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                            </table>
                         </div>
-                      </Grid>
-                    </Grid> : false}
+                        <div item xs={12} sm={12}>
+                          <div style={{textAlign:"center"}}>
+                            <p>total % of 100%</p>
+                            <p>left% left</p>
+                          </div>
+                        </div>
+                    </div> 
+                    : false}
                     {/* ends here */}
-
-
-                    <Grid>
-
-                    </Grid>
-                  </Grid>
+                  </div>
+                  </div>
                 </Box>
               </Box>
             </div>

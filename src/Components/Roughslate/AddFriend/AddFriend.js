@@ -12,9 +12,10 @@ import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import './AddFriend.css';
 
-export default function AddFriend({group,members}) {
+export default function AddFriend({groupMembers}) {
     const [open, setOpen] = React.useState(false);
     const [data, setData] = React.useState('');
+    const [error,setError] = React.useState(false);
     const [chipData, setChipData] = React.useState([
     ]);
     const handleAddFriend =(e)=>{
@@ -23,10 +24,13 @@ export default function AddFriend({group,members}) {
     }
     const handleAdd = (e)=>{
       e.preventDefault();
-      if(chipData.includes(data)){
+      setError(false);
+      if(chipData.includes(data.trim()) || data === null || data === "" || data === " "){
+        setError(true);
+        setData('');
         return
       }
-      setChipData([...chipData,data])
+      setChipData([...chipData,data.trim()])
       setData('');
     }
     const handleDelete = (chipToDelete) => () => {
@@ -38,13 +42,16 @@ export default function AddFriend({group,members}) {
     };
   
     const handleSave = () => {
-      members(chipData);
+      groupMembers(chipData);
       setChipData([]);
       setOpen(false);
     };
 
     const handleClose=()=>{
       setOpen(false);
+      setData('');
+      setChipData([]);
+      setError(false);
     }
 
   return (
@@ -54,11 +61,6 @@ export default function AddFriend({group,members}) {
         <DialogTitle id="form-dialog-title" className="modal_nav nav__text">Add Friend</DialogTitle>
         <DialogContent style={{width:'30rem'}}>
             <DialogContentText>
-                <div className="content_text">
-                    <div>
-                        <span classname="group_title"> Group name&emsp;</span><span className="group_name">{group.name}</span>
-                    </div> 
-                </div>
                 <div className="add_root">
                     <Paper className="paper_chip">
                         {chipData.map((data,index) => {
@@ -92,6 +94,7 @@ export default function AddFriend({group,members}) {
                         />
                         <AddCircleOutlineIcon className="add" onClick={handleAdd}/>
                     </div>
+                    <div hidden={!error} style={{color:'red',textAlign:'center'}}><span>User already Exist</span></div>
             </DialogContentText>
         </DialogContent>
         <DialogActions className="modal_nav">

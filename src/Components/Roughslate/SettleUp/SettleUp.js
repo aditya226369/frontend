@@ -22,7 +22,7 @@ const useStyles = makeStyles(()=>({
   }
 }))
 
-export default function SettleUp({members}) {
+export default function SettleUp({groupMembers}) {
   const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -37,7 +37,7 @@ export default function SettleUp({members}) {
     const friend = "friend";
   return (
     <div>
-        <Button variant="contained" onClick={members.length===0 ? ()=>alert("Please select friends") : handleClickOpen} className={classes.btn}>-Settle</Button>
+        <Button variant="contained" onClick={groupMembers.length===0 ? ()=>alert("Please select friends") : handleClickOpen} className={classes.btn}>-Settle</Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" className="modal_nav nav__text">Settle Up</DialogTitle>
         <DialogContent style={{width:'400px',height:'300px'}}>
