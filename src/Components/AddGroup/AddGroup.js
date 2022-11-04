@@ -28,7 +28,7 @@ export default function AddGroup({fetched}) {
 
     const userExist = async(email)=>{
       try{
-        const getId = await fetch(`${url}/user/check`,{
+        const getId = await fetch(url+"/user/check",{
           method: "POST",
           headers:{
             "Content-Type":"application/json"

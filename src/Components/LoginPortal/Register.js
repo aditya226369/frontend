@@ -22,6 +22,7 @@ const theme = createTheme();
 
 export default function Register() {
   // const [error,setError] = useState(""); //shows error message if login failed
+  // console.log(url+"/login");
   const [error,setError] = useState({
     flag:true,
     message:""
@@ -57,7 +58,7 @@ export default function Register() {
       setError({flag:false,message:"Password and Confirm password doesn't match"});
     }else{
       try{
-        const res = await fetch(`{$url}/register`,{
+        const res = await fetch({url}+"/register",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"

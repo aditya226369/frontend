@@ -24,7 +24,7 @@ export default function AddFriend({group}) {
 
     const userExist = async(email)=>{
       try{
-        const getId = await fetch(`${url}/user/check`,{
+        const getId = await fetch(url+"/user/check",{
           method: "POST",
           headers:{
             "Content-Type":"application/json"

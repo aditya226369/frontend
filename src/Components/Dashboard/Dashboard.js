@@ -179,7 +179,7 @@ export default function Dashboard() {
 
   const logoutCall = async () => {
     try {
-      const res = await fetch(`${url}/logout`, {
+      const res = await fetch(url+"/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

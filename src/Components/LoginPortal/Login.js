@@ -50,7 +50,7 @@ export default function LoginPortal() {
       setError({flag:false,message:"Enter the required fields"});
     }else{
       try{
-        const res = await fetch(`${url}/login`,{
+        const res = await fetch(url+"/login",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"
