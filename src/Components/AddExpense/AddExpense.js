@@ -1,5 +1,4 @@
 import React,{useState} from "react";
-import {url} from '../../Globals/constants';
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
 import Box from '@material-ui/core/Box';
@@ -40,6 +39,12 @@ export default function AddExpense({props,members,roughslate}) {
   };
 
   const handleClose = () => {
+    setexpenseData({
+      "description":"",
+      "amount":0,
+      "paidby":[],
+      "split":[]
+    })
     setOpen(false);
   };
   
@@ -96,7 +101,6 @@ export default function AddExpense({props,members,roughslate}) {
                   sx={{ mt: 3 }}
                 >
                   <Grid container spacing={2} className={classes.container}>
-                  <h5></h5>
                   {!roughslate && <Grid item xs={12} sm={12} className={classes.choose_content}>
                     <div className={classes.group_content}>
                     <span>Inside*</span>
