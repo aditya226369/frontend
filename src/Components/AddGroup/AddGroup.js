@@ -1,5 +1,5 @@
 import React from 'react';
-import {url} from '../../Globals/constants';
+import {backendurl} from '../../Globals/constants';
 import Button from '@material-ui/core/Button';
 import {TextField} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
@@ -28,7 +28,7 @@ export default function AddGroup({fetched}) {
 
     const userExist = async(email)=>{
       try{
-        const getId = await fetch(url+"/user/check",{
+        const getId = await fetch(backendurl+"/user/check",{
           method: "POST",
           headers:{
             "Content-Type":"application/json"
@@ -44,7 +44,7 @@ export default function AddGroup({fetched}) {
     }
     const addGroupToDb=async(name,fetched,members)=>{
       try{
-        const request = await fetch(`${url}/group`,{
+        const request = await fetch(backendurl+"/group",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"

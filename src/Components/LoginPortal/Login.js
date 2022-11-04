@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {url} from '../../Globals/constants';
+import {backendurl} from '../../Globals/constants';
 import React, {useState} from "react";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -50,7 +50,7 @@ export default function LoginPortal() {
       setError({flag:false,message:"Enter the required fields"});
     }else{
       try{
-        const res = await fetch(url+"/login",{
+        const res = await fetch(backendurl+"/login",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"

@@ -1,5 +1,5 @@
 import React from 'react';
-import {url} from '../../Globals/constants';
+import {backendurl} from '../../Globals/constants';
 import Button from '@material-ui/core/Button';
 import {TextField} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
@@ -24,7 +24,7 @@ export default function AddFriend({group}) {
 
     const userExist = async(email)=>{
       try{
-        const getId = await fetch(url+"/user/check",{
+        const getId = await fetch(backendurl+"/user/check",{
           method: "POST",
           headers:{
             "Content-Type":"application/json"
@@ -45,7 +45,7 @@ export default function AddFriend({group}) {
 
     const addGroupToDb=async(gid,members)=>{
       try{
-        const request = await fetch(`${url}/group/add`,{
+        const request = await fetch(backendurl+"/group/add",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"

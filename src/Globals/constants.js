@@ -1,1 +1,1 @@
-export const url = 'https://billsplit-finance.onrender.com';
+export const backendurl = 'https://billsplit-finance.onrender.com';

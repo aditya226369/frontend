@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {url} from '../../Globals/constants';
+import {backendurl} from '../../Globals/constants';
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -179,7 +179,7 @@ export default function Dashboard() {
 
   const logoutCall = async () => {
     try {
-      const res = await fetch(url+"/logout", {
+      const res = await fetch(backendurl+"/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -191,18 +191,18 @@ export default function Dashboard() {
       }
     } catch (e) {
       console.log(e);
-      navigate(`${url}/login`);
+      navigate("/login");
     }
   };
 
   const handleLogout = (e) => {
     logoutCall();
-    navigate(`${url}/login`);
+    navigate("/login");
   };
 
   const getGroupMemberName = async (id) => {
     try {
-      const getUser = await fetch(`${url}/user`, {
+      const getUser = await fetch(backendurl+"/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -241,7 +241,7 @@ export default function Dashboard() {
   };
   const fetchTransactionFromgid = async (gid) => {
     try {
-      const getTransaction = await fetch(`${url}/transaction`, {
+      const getTransaction = await fetch(backendurl+"/transaction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -260,7 +260,7 @@ export default function Dashboard() {
   };
   const fetchgroupFromUid = async (data) => {
     try {
-      const getGroup = await fetch(`${url}/group/user`, {
+      const getGroup = await fetch(backendurl+"/group/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -278,7 +278,7 @@ export default function Dashboard() {
   };
   const callDashboardPage = async () => {
     try {
-      const res = await fetch(`${url}/dashboard`, {
+      const res = await fetch(backendurl+"/dashboard", {
         method: "GET",
         headers: {
           Accept: "application/json",

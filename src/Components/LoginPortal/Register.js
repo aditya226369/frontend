@@ -1,5 +1,5 @@
 import { useNavigate} from "react-router-dom";
-import {url} from '../../Globals/constants';
+import {backendurl} from '../../Globals/constants';
 import React, { useState } from "react";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -58,7 +58,7 @@ export default function Register() {
       setError({flag:false,message:"Password and Confirm password doesn't match"});
     }else{
       try{
-        const res = await fetch({url}+"/register",{
+        const res = await fetch(backendurl+"/register",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"
