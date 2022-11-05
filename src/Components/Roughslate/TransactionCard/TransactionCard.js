@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import classes from "./TransactionCard.module.css";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
 function TransactionCard({ transaction,groupMembers }) {
-  const [data, setData] = useState();
+  console.log(groupMembers);
   return (
     <div className={classes.transaction_container}>
       <Table style={{ width: "100%" }}>
@@ -21,7 +17,6 @@ function TransactionCard({ transaction,groupMembers }) {
             <TableCell>FROM</TableCell>
             <TableCell>TO</TableCell>
             <TableCell>DATE</TableCell>
-            {/* <TableCell>UPDATE</TableCell> */}
         </TableRow>
         <TableBody>
           {(transaction.transactions).length > 0 && transaction.transactions.map((item, index) => {
@@ -29,7 +24,7 @@ function TransactionCard({ transaction,groupMembers }) {
             const toArr=[];
             for(let i=0;i<item.fromTo[1].length;i++){
               if(item.fromTo[1][i] >0 ){
-                toArr.push(groupMembers[1][i]);
+                toArr.push(groupMembers[i]);
               }
             }
             const strTo = toArr.join(',');
@@ -41,7 +36,7 @@ function TransactionCard({ transaction,groupMembers }) {
                   {item.amount}
                 </TableCell>
                 <TableCell>
-                  {groupMembers[1][item.fromTo[0]]}
+                  {groupMembers[item.fromTo[0]]}
                 </TableCell>
                 <TableCell>
                   {strTo}

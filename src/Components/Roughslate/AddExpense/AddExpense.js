@@ -12,26 +12,34 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import CreateIcon from "@material-ui/icons/Create";
 import classes from "./AddExpense.module.css";
 
-export default function AddExpense({ groupMembers, transaction }) {
+export default function AddExpense({ groupMembers, addtransaction }) {
   const before = new Array(groupMembers.length).fill(0);
   const [open, setOpen] = React.useState(false);
   const [label, setLabel] = React.useState("Food");
   const [paidBy, setPaidBy] = React.useState("");
   const [split, setSplit] = React.useState("equal");
-  const [amount, setAmount] = React.useState();
-  const [checkAmount, setCheckAmount] = React.useState([0,0]);
+  const [checkAmount, setCheckAmount] = React.useState([0, 0]);
   const [calAmount, setCalAmount] = React.useState(0);
   const [expense, setExpense] = React.useState({
     label: "Food",
     description: "",
     date: "",
-    fromTo: [0,[]],
+    fromTo: [0, []],
     amount: 0,
   });
   console.log(expense);
-  console.log(groupMembers)
-  console.log(checkAmount)
+  console.log(groupMembers);
+  console.log(checkAmount);
 
+  React.useEffect(()=>{
+    setExpense({
+      label: "Food",
+      description: "",
+      date: "",
+      fromTo: [0, []],
+      amount: 0,
+    })
+  },[]);
   const handleChangePaidBy = (e) => {
     e.preventDefault();
     const newname = e.target.value;
@@ -53,7 +61,7 @@ export default function AddExpense({ groupMembers, transaction }) {
   };
   const handleDescription = (e) => {
     e.preventDefault();
-    handleAppends('description',e.target.value);
+    handleAppends("description", e.target.value);
   };
 
   const handleAppends = (field, value) => {
@@ -69,7 +77,7 @@ export default function AddExpense({ groupMembers, transaction }) {
 
   const handleChangeLabel = (e) => {
     e.preventDefault();
-    handleAppends('label', e.target.value);
+    handleAppends("label", e.target.value);
   };
   const handleAmount = (e) => {
     e.preventDefault();
@@ -77,7 +85,7 @@ export default function AddExpense({ groupMembers, transaction }) {
     const regex = /^[0-9-+/*]*$/;
     const data = regex.test(amt);
     if (data) {
-      handleAppends('amount',amt);
+      handleAppends("amount", amt);
     }
   };
   function evil(fn) {
@@ -85,19 +93,19 @@ export default function AddExpense({ groupMembers, transaction }) {
   }
   const handleCal = (e) => {
     e.preventDefault();
-    setAmount(evil(amount));
+    handleAppends("amount", evil(expense.amount));
   };
   const handleChangeCal = (e) => {
     e.preventDefault();
     const splitType = e.target.value;
     setSplit(splitType);
   };
-  const handleInputAmount = (idx,e) => {
+  const handleInputAmount = (idx, e) => {
     e.preventDefault();
     const data = e.target.value || 0;
-    let sum=0;
+    let sum = 0;
     let newAmount = checkAmount;
-    newAmount[idx] = newAmount[idx]+ data;
+    newAmount[idx] = newAmount[idx] + data;
     setCheckAmount(newAmount);
     console.log(newAmount);
     for (let i in newAmount) {
@@ -106,7 +114,35 @@ export default function AddExpense({ groupMembers, transaction }) {
 
     setCalAmount(sum);
   };
-console.log(checkAmount);
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    const idxPaidBy = groupMembers.indexOf(paidBy);
+    console.log(idxPaidBy);
+    const split = parseInt(expense.amount / groupMembers.length);
+    console.log(split);
+    const arr = new Array(groupMembers.length).fill(split);
+    console.log(arr);
+    const ft = [idxPaidBy,arr];
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    addtransaction({
+      label: expense.label,
+      description: expense.description,
+      date: new Date().toLocaleString("en-US",options),
+      fromTo: ft,
+      amount: parseInt(expense.amount),
+    });
+    setOpen(false);
+    setExpense({
+      label: "Food",
+      description: "",
+      date: "",
+      fromTo: [0, []],
+      amount: 0,
+    })
+  };
+
+  console.log(checkAmount);
   return (
     <div>
       <Button
@@ -134,7 +170,7 @@ console.log(checkAmount);
           className={classes.dialog}
           style={{ overflowY: "visible" }}
         >
-          <DialogContentText>
+          <DialogContentText component={'div'}>
             <div className={classes.content_text}>
               <Box
                 sx={{
@@ -190,14 +226,14 @@ console.log(checkAmount);
                         <td>
                           <Select
                             fullWidth
-                            value={groupMembers[paidBy]}
+                            value={paidBy}
                             variant="outlined"
                             onChange={handleChangePaidBy}
                             IconComponent={CreateIcon}
                           >
                             {groupMembers.map((item, index) => {
                               return (
-                                <MenuItem key={index} value={index}>
+                                <MenuItem key={index} value={item}>
                                   {item}
                                 </MenuItem>
                               );
@@ -208,7 +244,7 @@ console.log(checkAmount);
                       <tr>
                         <td>Split</td>
                         <td>
-                            Equally
+                          Equally
                           {/* <Select
                             fullWidth
                             labelId="demo-simple-select-label"
@@ -242,7 +278,6 @@ console.log(checkAmount);
                         </td>
                       </tr>
                     </table>
-                    
                   </div>
                 </Box>
               </Box>
@@ -253,7 +288,7 @@ console.log(checkAmount);
           <Button onClick={handleClose} color="secondary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="secondary" variant="contained">
+          <Button onClick={handleSave} color="secondary" variant="contained">
             Save
           </Button>
         </DialogActions>

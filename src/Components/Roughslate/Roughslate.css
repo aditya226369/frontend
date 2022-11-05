@@ -9,7 +9,13 @@
     width: 100%;
     text-align: center;
 }
-
+.greybackground{
+    background-color: rgb(231 226 226);
+    cursor:pointer
+}
+.normal{
+    cursor:pointer
+}
 .grid_container{
     display: grid;
     padding: 10px;

@@ -8,12 +8,14 @@
     text-align: center;
 }
 
-.content_text{
+.settleup_content_text{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 }
 
-.description_block{
+.flex_box{
     display: flex;
+    justify-content: space-evenly;
+    gap: 1rem;
+    align-items: center;
 }

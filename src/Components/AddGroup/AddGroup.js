@@ -36,9 +36,12 @@ export default function AddGroup({fetched}) {
           body: JSON.stringify({email})
         })
         const jsonData = await getId.json();
-        return jsonData;
+        if(jsonData.status === 200){
+          return jsonData;
+        }else{
+          return false;
+        }
       }catch(e){
-        console.log(e);
         return false;
       }
     }
@@ -82,23 +85,36 @@ export default function AddGroup({fetched}) {
         return
       }
       const check = await userExist(data);
+      console.log(check);
       if(check && check._id!==fetched._id ){
         const obj = {name:check.name,uid:check._id}
         setChipData([...chipData,obj])
+        setData('')
+      }else{
+        setError(false);
       }
-      setData('')
+      return
     }
     const handleDelete = (chipToDelete) => () => {
       let chips = chipData;
+      console.log(chips);
       chips.splice(chipToDelete,1);
       setChipData(chips);
     };
 
     const handleClickOpen = () => {
+      setError(false);
+      setChipData([
+        {
+          name:'with You &',
+          id:''
+        }
+      ])
       setOpen(true);
     };
   
     const handleClose = () => {
+     
       setOpen(false);
     };
 
@@ -110,9 +126,13 @@ export default function AddGroup({fetched}) {
       for(let i=0;i<chips.length;i++){
         memberIdArray.push(chips[i].uid);
       }
-      await addGroupToDb(name,fetched,memberIdArray)
-      window.location.reload(false);
-      setOpen(false);
+      if(memberIdArray.length>1){
+        await addGroupToDb(name,fetched,memberIdArray)
+        window.location.reload(false);
+        setOpen(false);
+      }else{
+        alert("Please add members");
+      }
     }
 
   return (

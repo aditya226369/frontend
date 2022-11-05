@@ -1,8 +1,9 @@
 import React from "react";
 import classes from "./SimplifyCard.module.css";
 function SimplifyCard({ groupMembers, transaction }) {
-    console.log(transaction.simplified);
+    console.log(transaction);
     console.log(groupMembers);
+
   return (
     <>
       <div className={classes.board_title}>
@@ -20,9 +21,9 @@ function SimplifyCard({ groupMembers, transaction }) {
                   <span key={index}>Please choose a group</span>
                 ) : (
                   <span key={index}>
-                    {(groupMembers[1][parseInt(item[0])][1]) }
+                    {(groupMembers[parseInt(item[0])]) }
                     {` gives `}
-                    {groupMembers[1][parseInt(item[1])][1]}
+                    {groupMembers[parseInt(item[1])]}
                     {" Rs."}
                     {Math.abs(item[2])}
                   </span>

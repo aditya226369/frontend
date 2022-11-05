@@ -36,7 +36,26 @@ export default function LoginPortal() {
     name = e.target.name;
     value = e.target.value;
     setUser({...user,[name]:value});
+    
+    
   }
+  const validateEmail=(e)=>{
+    e.preventDefault();
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!regex.test(user.email)){
+      setError({
+        flag:false,
+        message:'You have entered an invalid email address!'
+      })
+    }else{
+      setError({
+        flag:true,
+        message:''
+      })
+    }
+  }
+
+  
 
   function changeRoutes(){
     navigate("/dashboard");
@@ -49,28 +68,31 @@ export default function LoginPortal() {
     if(!email || !password){
       setError({flag:false,message:"Enter the required fields"});
     }else{
-      try{
-        const res = await fetch(backendurl+"/login",{
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            email,password
-          })
-        });
-  
-        const data = await res.json();
-        if(data.status === 401 || !data){
-          setError({flag:false,message:"Incorrect username or password"});
-        }else if(data.status === 200){
-          changeRoutes();
+        if(error.flag === true){
+        try{
+          const res = await fetch("/login",{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json",
+            },
+            credentials: "include",
+            body:JSON.stringify({
+              email,password
+            })
+          });
+    
+          const data = await res.json();
+          if(data.status === 401 || !data){
+            setError({flag:false,message:"Incorrect username or password"});
+          }else if(data.status === 200){
+            changeRoutes();
+          }
+          else{
+            setError({flag:false,message:"Incorrect username or password"});
+          }
+        }catch(e){
+          setError({flag:false,message:"Error occured please try after some time"});
         }
-        else{
-          setError({flag:false,message:"Incorrect username or password"});
-        }
-      }catch(e){
-        setError({flag:false,message:"Error occured please try after some time"});
       }
     }
     
@@ -102,7 +124,7 @@ export default function LoginPortal() {
                 <Box
                   component="form"
                   sx={{ mt: 3 }}
-                >
+                ><form validate>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
                       <TextField
@@ -113,6 +135,7 @@ export default function LoginPortal() {
                         type="email"
                         label="Email Address"
                         value={user.email}
+                        onBlur={validateEmail}
                         onChange={handleInputs}
                         autoComplete="email"
                       />
@@ -146,6 +169,7 @@ export default function LoginPortal() {
                       Don't have an account? Sign in
                     </Link>
                   </Grid>
+                </form>
                 </Box>
               </Box>
             </Container>

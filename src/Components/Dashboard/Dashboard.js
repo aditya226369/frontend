@@ -306,10 +306,9 @@ export default function Dashboard() {
     callDashboardPage();
   }, []);
 
-  // useEffect(()=>{
-  //   fetchgroupFromUid(fetched._id)
-  // },[state])
-
+  const addtransaction=(label,description,date,fromTo,amount)=>{
+    console.log({label,description,date,fromTo,amount});
+  }
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -512,8 +511,10 @@ export default function Dashboard() {
                 <AddExpense
                   className={classes.addexpense}
                   members={groupMembers}
-                  groupMembers={groupMembers}
-                  transaction={transaction}
+                  addtransaction={addtransaction}
+                  fetched={fetched}
+                  group={group}
+                  isId={isId}
                 />
               </div>
               <div className="inner_box_control_btn ">

@@ -1,10 +1,8 @@
-import React,{useState} from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from "@material-ui/core/MenuItem";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -15,73 +13,140 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import classes from "./AddExpense.module.css";
 
 
-export default function AddExpense({props,members,roughslate}) {
+export default function AddExpense({members,addtransaction,fetched,isId,group}) {
   const [open, setOpen] = React.useState(false);
-  const [split, setSplit] = React.useState({
-    "stype": "",
-    "members": members
+  const [paidBy, setPaidBy] = React.useState(members[0]);
+  const [groupMembers,setGroupMembers] = React.useState([])
+  const [checkAmount, setCheckAmount] = React.useState([0, 0]);
+  const [expense, setExpense] = React.useState({
+    groupIdx: 0,
+    label: "Food",
+    description: "",
+    date: "",
+    fromTo: [0, []],
+    amount: 0,
   });
-  const [amount, setAmount] = React.useState();
-  const [expenseData , setexpenseData]  = useState([{
-    description:"",
-    amount:0,
-    label:'Food',
-    date:'',
-    fromTo:0
-  }]);
 
-
-  const handleChange = (event) => {
-    const newname = event.target.value;
-    console.log(newname);
+  React.useEffect(()=>{
+    setExpense({
+      groupIdx: 0,
+      label: "Food",
+      description: "",
+      date: "",
+      fromTo: [0, []],
+      amount: 0,
+    })
+    let ng=[];
+    for(let i=0;i<groupMembers.length;i++){
+      ng.push(members[i][1]);
+    }
+    setGroupMembers(ng);
+  },[]);
+  const handleChangePaidBy = (e) => {
+    e.preventDefault();
+    const newname = e.target.value;
+    setPaidBy(newname);
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e) => {
+    e.preventDefault();
+    let ng=[];
+    for(let i=0;i<groupMembers.length;i++){
+      ng.push(members[i][1]);
+    }
+    setGroupMembers([...ng]);
+    const arr = new Array(groupMembers.length).fill(0);
+    setCheckAmount(arr);
+    setPaidBy(groupMembers[0]);
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setexpenseData({
-      "description":"",
-      "amount":0,
-      "paidby":[],
-      "split":[]
-    })
+  const handleClose = (e) => {
+    e.preventDefault();
     setOpen(false);
   };
-  
-  const handleAmount = (e)=>{
+  const handleDescription = (e) => {
+    e.preventDefault();
+    handleAppends("description", e.target.value);
+  };
+
+  const handleAppends = (field, value) => {
+    const makeObj = {
+      groupIdx: field === "groupIdx" ? value : expense.groupIdx,
+      label: field === "label" ? value : expense.label,
+      description: field === "description" ? value : expense.description,
+      date: field === "date" ? value : expense.date,
+      fromTo: field === "fromTo" ? value : expense.fromTo,
+      amount: field === "amount" ? value : expense.amount,
+    };
+    setExpense(makeObj);
+  };
+
+  const handleChangeLabel = (e) => {
+    e.preventDefault();
+    handleAppends("label", e.target.value);
+  };
+  const handleAmount = (e) => {
     e.preventDefault();
     const amt = e.target.value;
     const regex = /^[0-9-+/*]*$/;
     const data = regex.test(amt);
-    if(data){
-      setAmount(amt);
+    if (data) {
+      handleAppends("amount", amt);
     }
-  }
+  };
   function evil(fn) {
-    return new Function('return ' + fn)();
+    return new Function("return " + fn)();
   }
-  const handleCal=(e)=>{
+  const handleCal = (e) => {
     e.preventDefault();
-    setAmount(evil(amount));
+    handleAppends("amount", evil(expense.amount));
+  };
+  
+  const handleChangeGroup = (e)=>{
+    e.preventDefault();
+    handleAppends('groupIdx',e.target.value);
   }
-  const handleChangeCal=(e)=>{
+  const handleSave = (e) => {
     e.preventDefault();
-    const splitType = e.target.value;
-    setSplit({
-      "stype":splitType,
-      "members":members
+    const idxPaidBy = groupMembers.indexOf(paidBy);
+    console.log(idxPaidBy);
+    const split = parseInt(expense.amount / groupMembers.length);
+    console.log(split);
+    const arr = new Array(groupMembers.length).fill(split);
+    console.log(arr);
+    const ft = [idxPaidBy,arr];
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    addtransaction({
+      label: expense.label,
+      description: expense.description,
+      date: new Date().toLocaleString("en-US",options),
+      fromTo: ft,
+      amount: parseInt(expense.amount),
     });
-  }
+    setOpen(false);
+    setExpense({
+      label: "Food",
+      description: "",
+      date: "",
+      fromTo: [0, []],
+      amount: 0,
+    })
+  };
 
-
+  console.log(checkAmount);
+  console.log(groupMembers);
   return (
     <div>
       <Button
         variant="contained"
-        onClick={handleClickOpen}
+        onClick={
+          members.length === 0
+            ? () => alert("Please select group")
+            : handleClickOpen
+        }
         className={classes.btn}
+        // disabled={members.length>0?false:true}
       >
         +Expense
       </Button>
@@ -89,15 +154,18 @@ export default function AddExpense({props,members,roughslate}) {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
-        style={{maxHeight:"100%"}}
+        style={{ maxHeight: "100%" }}
       >
         <DialogTitle id="form-dialog-title" className={classes.modal_nav}>
           <span>Add Expense</span>
         </DialogTitle>
-        <DialogContent className={classes.dialog} style={{overflowY:"visible"}}>
-          <DialogContentText>
-          <div className={classes.content_text}>
-            <Box
+        <DialogContent
+          className={classes.dialog}
+          style={{ overflowY: "visible" }}
+        >
+          <DialogContentText component={'div'}>
+            <div className={classes.content_text}>
+              <Box
                 sx={{
                   marginTop: 8,
                   display: "flex",
@@ -105,164 +173,132 @@ export default function AddExpense({props,members,roughslate}) {
                   alignItems: "center",
                 }}
               >
-                <Box
-                  component="form"
-                  sx={{ mt: 3 }}
-                >
-                <div className={classes.table_div}>
-                <table className={classes.table}>
-                <tr>
-                  <td>Label</td>
-                  <td>
-                    <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={expenseData.label}
-                        variant="outlined"
-                        IconComponent={CreateIcon}
-                        fullWidth
-                    >
-                        <MenuItem value={"Food"}>Food</MenuItem>
-                        <MenuItem value={"Groccery"}>Groccery</MenuItem>
-                        <MenuItem value={"Electric"}>Electric</MenuItem>
-                        <MenuItem value={"Trip"}>Trip</MenuItem>
-                        <MenuItem value={"Petrol"}>Petrol</MenuItem>
-                    </Select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Amount</td>
-                  <td>
-                  <TextField
-                        required
-                        fullWidth
-                        name="amount"
-                        type="text"
-                        value={expenseData.amount}
-                        onChange={handleAmount}
-                        onBlur={handleCal}
-                        InputProps={{ inputProps: { min: 1 } }}
-                        id="quantity"
-                        variant="outlined"
-                        autoComplete="amount"
-                      />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Paid By</td>
-                  <td>
-                    <Select
-                        fullWidth
-                        variant="outlined"
-                        IconComponent={CreateIcon}
-                      >
-                      {members.map((item,index)=>{
-                        return(
-                        <MenuItem key={index} value={item}>{item}</MenuItem>
-                        )
-                      })}
-                    </Select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Split</td>
-                  <td>
-                    <Select
-                      fullWidth
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={split}
-                      variant="outlined"
-                      onChange={handleChangeCal}
-                      IconComponent={CreateIcon}
-                    >
-                      <MenuItem value={"equal"}>EQUAL</MenuItem>
-                      <MenuItem value={"unequal"}>UNEQUAL</MenuItem>
-                      <MenuItem value={"percentage"}>PERCENTAGE</MenuItem>
-                    </Select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Description</td>
-                  <td>
-                    <TextField
-                        className={classes.Textfield}
-                        required
-                        fullWidth
-                        id="description"
-                        name="description"
-                        type="text"
-                        variant="outlined"
-                        autoComplete="description"
-                      />
-                  </td>
-                </tr>
-                </table>
-                  <div className={classes.container}>
-                    {/* unequal block */}
-                    {split === "unequal" ? 
-                      <div className={classes.block}>
-                        <div className={classes.block_div}>
-                          <table className={classes.block_table}>
-                            {members.map((item,index)=>{
-                              return(
-                                <tr key={index}>
-                                  <td className={classes.table_td}>{item}</td>
-                                  <td className={classes.table_td}>
-                                    <span>Rs.
-                                    <span><input  name={index}  className={classes.input_amount} type="number" /></span>
-                                    </span>
-                                  </td>
-                              </tr>
-                              )
+                <Box component="form" sx={{ mt: 3 }}>
+                  <div className={classes.table_div}>
+                    <table className={classes.table}>
+                    <tr>
+                        <td>Group</td>
+                        <td>
+                        {group[isId] ? 
+                        <TextField
+                            required
+                            fullWidth
+                            name="amount"
+                            type="text"
+                            value={group[isId].name}
+                            InputProps={{ inputProps: { min: 1 } }}
+                            id="quantity"
+                            variant="outlined"
+                            autoComplete="amount"
+                          /> : ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Label</td>
+                        <td>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value={expense.label}
+                            variant="outlined"
+                            onChange={handleChangeLabel}
+                            IconComponent={CreateIcon}
+                            fullWidth
+                          >
+                            <MenuItem value={"Food"}>Food</MenuItem>
+                            <MenuItem value={"Groccery"}>Groccery</MenuItem>
+                            <MenuItem value={"Electric"}>Electric</MenuItem>
+                            <MenuItem value={"Trip"}>Trip</MenuItem>
+                            <MenuItem value={"Petrol"}>Petrol</MenuItem>
+                          </Select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Amount</td>
+                        <td>
+                          <TextField
+                            required
+                            fullWidth
+                            name="amount"
+                            type="text"
+                            value={expense.amount}
+                            onChange={handleAmount}
+                            onBlur={handleCal}
+                            InputProps={{ inputProps: { min: 1 } }}
+                            id="quantity"
+                            variant="outlined"
+                            autoComplete="amount"
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Paid By</td>
+                        <td>
+                          <Select
+                            fullWidth
+                            value={paidBy}
+                            variant="outlined"
+                            onChange={handleChangePaidBy}
+                            IconComponent={CreateIcon}
+                          >
+                            {groupMembers.map((item, index) => {
+                              return (
+                                <MenuItem key={index} value={item[1]}>
+                                  {item[1]}
+                                </MenuItem>
+                              );
                             })}
-                          </table>
-                        </div>
-                        <div style={{textAlign:"center"}}>
-                          <p>Rs.{amount} of Rs.{amount}</p>
-                          <p>Rs.{amount-amount} left</p>
-                        </div>
-                      </div> : false}
-                    {/* ends here */}
-
-                    {/* percentage block */}
-                    {split === "percentage" ? 
-                      <div className={classes.block}>
-                        <div style={{width:'100%'}}>
-                          <table style={{width:"100%",padding:"1px"}}>
-                            {members.map((item,index)=>{
-                              return(
-                                <tr key={index}>
-                                  <td style={{textAlign:"center"}}>{item}</td>
-                                  <td style={{textAlign:"center"}}>
-                                    <span><input className={classes.input_amount} type="number" />%</span>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-                            </table>
-                        </div>
-                        <div item xs={12} sm={12}>
-                          <div style={{textAlign:"center"}}>
-                            <p>total % of 100%</p>
-                            <p>left% left</p>
-                          </div>
-                        </div>
-                    </div> 
-                    : false}
-                    {/* ends here */}
-                  </div>
+                          </Select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Split</td>
+                        <td>
+                          Equally
+                          {/* <Select
+                            fullWidth
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={split}
+                            variant="outlined"
+                            onChange={handleChangeCal}
+                            IconComponent={CreateIcon}
+                          >
+                            <MenuItem value={"equal"}>EQUAL</MenuItem>
+                            <MenuItem value={"unequal"}>UNEQUAL</MenuItem>
+                            <MenuItem value={"percentage"}>PERCENTAGE</MenuItem>
+                          </Select> */}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Description</td>
+                        <td>
+                          <TextField
+                            className={classes.Textfield}
+                            required
+                            fullWidth
+                            id="description"
+                            name="description"
+                            value={expense.description}
+                            type="text"
+                            variant="outlined"
+                            autoComplete="description"
+                            onChange={handleDescription}
+                          />
+                        </td>
+                      </tr>
+                    </table>
                   </div>
                 </Box>
               </Box>
             </div>
-           </DialogContentText>
+          </DialogContentText>
         </DialogContent>
         <DialogActions className={classes.modal_nav}>
           <Button onClick={handleClose} color="secondary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="secondary" variant="contained">
+          <Button onClick={handleSave} color="secondary" variant="contained">
             Save
           </Button>
         </DialogActions>

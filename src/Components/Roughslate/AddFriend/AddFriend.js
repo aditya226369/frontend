@@ -60,7 +60,7 @@ export default function AddFriend({groupMembers}) {
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" className="modal_nav nav__text">Add Friend</DialogTitle>
         <DialogContent style={{width:'30rem'}}>
-            <DialogContentText>
+            <DialogContentText component={'div'}>
                 <div className="add_root">
                     <Paper className="paper_chip">
                         {chipData.map((data,index) => {

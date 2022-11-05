@@ -45,6 +45,21 @@ export default function Register() {
     setUser({...user,[name]:value});
   }
 
+  const validateEmail=(e)=>{
+    e.preventDefault();
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!regex.test(user.email)){
+      setError({
+        flag:false,
+        message:'You have entered an invalid email address!'
+      })
+    }else{
+      setError({
+        flag:true,
+        message:''
+      })
+    }
+  }
   const handleSubmit = (event) => {
     event.preventDefault();
     
@@ -138,6 +153,7 @@ export default function Register() {
                         label="Email Address"
                         name="email"
                         value={user.email}
+                        onBlur={validateEmail}
                         onChange={handleInputs}
                         autoComplete="email"
                       />
