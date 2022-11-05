@@ -171,7 +171,6 @@ export default function Dashboard() {
     simplified: 0,
     showAmount: [0, 0],
     gid: "",
-    _id: "",
   });
   const [show, setShow] = React.useState(false);
   const [groupMembers, setGroupMembers] = React.useState([]);
@@ -306,8 +305,59 @@ export default function Dashboard() {
     callDashboardPage();
   }, []);
 
-  const addtransaction=(label,description,date,fromTo,amount)=>{
-    console.log({label,description,date,fromTo,amount});
+  const addTransactionToDB=async({ gid, fromTo, amount, description, label, date })=>{
+    try{
+
+      const res = await fetch(backendurl+"/transaction/add",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application.json"
+        },
+        body: JSON.stringify({ gid, fromTo, amount, description, label, date })
+      });
+      if(res.status === 200){
+        return true;
+      }else{
+        return false;
+      }
+    }catch(e){
+      console.log(e);
+      return false;
+    }
+  }
+  const getSimplify=async({fromTo,showAmount, simplified,amount})=>{
+    try{
+      const res = await fetch(backendurl+"/simplify",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify({fromTo, showAmount, simplified, amount})
+      });
+      if(res.status === 200){
+        const data = await res.json();
+        return data;
+      }else{
+        return false;
+      }
+    }catch(e){
+      console.log(e);
+      return false;
+    }
+  }
+
+  const addtransaction=async(label,description,date,fromTo,amount)=>{
+    const newTransactionArr = [...transaction.transactions,{label,description,date,fromTo,amount}];
+    const pushTransaction  = await addTransactionToDB({ gid:group[isId].gid, fromTo:fromTo, amount:amount, description:description, label:label, date:date });
+    if(pushTransaction){
+      const getSimplifyArr = await getSimplify(fromTo,transaction.showAmount, transaction.simplified,amount);
+      setTransaction({
+        transactions: newTransactionArr,
+        simplified: getSimplifyArr.simplified,
+        showAmount: getSimplifyArr.showAmount,
+        gid: transaction.gid,
+      });
+    }
   }
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -327,17 +377,21 @@ export default function Dashboard() {
   };
 
   const onClickGroupButton = async (idx, e) => {
+    console.log(group[idx].gid);
     setGroupMembers([group[idx], group[idx].members]);
     const res = await fetchTransactionFromgid(group[idx].gid);
-    const indexOfUser = group[idx].members[0].indexOf(fetched._id);
-    setId(indexOfUser);
-    setTransaction({
-      transactions: res.transactions,
-      simplified: res.simplified,
-      showAmount: res.showAmount[indexOfUser],
-      gid: res.gid,
-      _id: res._id,
-    });
+    console.log(res);
+    console.log(transaction);
+    if(res){
+      const indexOfUser = group[idx].members[0].indexOf(fetched._id);
+      setId(indexOfUser);
+      setTransaction({
+        transactions: res.transactions,
+        simplified: res.simplified,
+        showAmount: res.showAmount[indexOfUser],
+        gid: res.gid,
+      });
+    }
     setShow(true);
   };
   
@@ -508,17 +562,17 @@ export default function Dashboard() {
             </div>
             <div className="control_btn">
               <div className="inner_box_control_btn">
-                <AddExpense
+                {groupMembers.length >0 ? <AddExpense
                   className={classes.addexpense}
-                  members={groupMembers}
+                  groupMembers={groupMembers}
                   addtransaction={addtransaction}
                   fetched={fetched}
                   group={group}
                   isId={isId}
-                />
+                /> : false}
               </div>
               <div className="inner_box_control_btn ">
-                <SettleUp className="settleup" />
+                {/* <SettleUp className="settleup" /> */}
               </div>
             </div>
           </div>

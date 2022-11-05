@@ -10,7 +10,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import CreateIcon from "@material-ui/icons/Create";
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DescriptionRoundedIcon from '@material-ui/icons/DescriptionRounded';
 import './SettleUp.css';
 
 

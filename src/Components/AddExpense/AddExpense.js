@@ -13,11 +13,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import classes from "./AddExpense.module.css";
 
 
-export default function AddExpense({members,addtransaction,fetched,isId,group}) {
+export default function AddExpense({groupMembers,addtransaction,fetched,isId,group}) {
   const [open, setOpen] = React.useState(false);
-  const [paidBy, setPaidBy] = React.useState(members[0]);
-  const [groupMembers,setGroupMembers] = React.useState([])
-  const [checkAmount, setCheckAmount] = React.useState([0, 0]);
+  const [paidBy, setPaidBy] = React.useState([0,'']);
   const [expense, setExpense] = React.useState({
     groupIdx: 0,
     label: "Food",
@@ -36,27 +34,17 @@ export default function AddExpense({members,addtransaction,fetched,isId,group}) 
       fromTo: [0, []],
       amount: 0,
     })
-    let ng=[];
-    for(let i=0;i<groupMembers.length;i++){
-      ng.push(members[i][1]);
-    }
-    setGroupMembers(ng);
+    
   },[]);
   const handleChangePaidBy = (e) => {
     e.preventDefault();
+    const newvalue = e.target.value;
     const newname = e.target.value;
-    setPaidBy(newname);
+    setPaidBy([newname,newvalue]);
   };
 
   const handleClickOpen = (e) => {
     e.preventDefault();
-    let ng=[];
-    for(let i=0;i<groupMembers.length;i++){
-      ng.push(members[i][1]);
-    }
-    setGroupMembers([...ng]);
-    const arr = new Array(groupMembers.length).fill(0);
-    setCheckAmount(arr);
     setPaidBy(groupMembers[0]);
     setOpen(true);
   };
@@ -103,15 +91,12 @@ export default function AddExpense({members,addtransaction,fetched,isId,group}) 
     handleAppends("amount", evil(expense.amount));
   };
   
-  const handleChangeGroup = (e)=>{
-    e.preventDefault();
-    handleAppends('groupIdx',e.target.value);
-  }
+  
   const handleSave = (e) => {
     e.preventDefault();
-    const idxPaidBy = groupMembers.indexOf(paidBy);
+    const idxPaidBy = paidBy[0];
     console.log(idxPaidBy);
-    const split = parseInt(expense.amount / groupMembers.length);
+    const split = parseInt(expense.amount) / groupMembers[1].length;
     console.log(split);
     const arr = new Array(groupMembers.length).fill(split);
     console.log(arr);
@@ -134,14 +119,13 @@ export default function AddExpense({members,addtransaction,fetched,isId,group}) 
     })
   };
 
-  console.log(checkAmount);
   console.log(groupMembers);
   return (
     <div>
       <Button
         variant="contained"
         onClick={
-          members.length === 0
+          groupMembers[1].length === 0
             ? () => alert("Please select group")
             : handleClickOpen
         }
@@ -236,14 +220,14 @@ export default function AddExpense({members,addtransaction,fetched,isId,group}) 
                         <td>
                           <Select
                             fullWidth
-                            value={paidBy}
+                            value={paidBy[1]}
                             variant="outlined"
                             onChange={handleChangePaidBy}
                             IconComponent={CreateIcon}
                           >
-                            {groupMembers.map((item, index) => {
+                            {groupMembers[1].map((item, index) => {
                               return (
-                                <MenuItem key={index} value={item[1]}>
+                                <MenuItem key={index} name={index} value={item[1]}>
                                   {item[1]}
                                 </MenuItem>
                               );

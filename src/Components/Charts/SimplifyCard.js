@@ -13,13 +13,12 @@ function SimplifyCard({ groupMembers,isId, transaction }) {
           (transaction.transactions).length>0 &&
           transaction.simplified!==0?transaction.simplified.map((item, index) => {
             const isGroup = item[0] === null ? true : false;
-            const flag = item[2] > 0 ? true : false;
             return (
               <div className={classes.board_item} key={index}>
                 {isGroup ? (
-                  <span key={index}>Please choose a group</span>
+                  <span>Please choose a group</span>
                 ) : (
-                  <span key={index}>
+                  <span>
                     {item[0] === isId ? " You " : (groupMembers[1][parseInt(item[0])][1]) }
                     {` gives `}
                     {groupMembers[1][parseInt(item[1])][1]}
@@ -35,4 +34,4 @@ function SimplifyCard({ groupMembers,isId, transaction }) {
   );
 }
 
-export default SimplifyCard;
+export default React.memo(SimplifyCard);
