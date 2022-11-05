@@ -1,1 +1,1 @@
-export const backendurl =  'https://billsplit-finance.onrender.com'; ////'http://localhost:5000'//
+export const backendurl = 'https://billsplit-finance.onrender.com'; 
