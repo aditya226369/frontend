@@ -36,7 +36,7 @@ export default function AddGroup({fetched}) {
           body: JSON.stringify({email})
         })
         const jsonData = await getId.json();
-        if(jsonData.status === 200){
+        if(getId.status === 200){
           return jsonData;
         }else{
           return false;
@@ -80,30 +80,30 @@ export default function AddGroup({fetched}) {
     const handleAdd = async(e)=>{
       e.preventDefault();
       setError(true);
-      if(chipData.includes(data) || data===null || data==='' || data===' '){
+      const trimmedEmail = data.replace(/^\s+|\s+$/gm,'');
+      if(chipData.includes(trimmedEmail) || data===null || trimmedEmail===null || data==='' || data===' '){
         setError(false);
         return
-      }
-      const check = await userExist(data);
-      console.log(check);
-      if(check && check._id!==fetched._id ){
-        const obj = {name:check.name,uid:check._id}
-        setChipData([...chipData,obj])
-        setData('')
       }else{
-        setError(false);
+        const check = await userExist(trimmedEmail);
+        if(check && check._id!==fetched._id ){
+          const obj = {name:check.name,uid:check._id}
+          setChipData([...chipData,obj])
+          setData('')
+        }else{
+          setError(false);
+        }
+        return
       }
-      return
     }
     const handleDelete = (chipToDelete) => () => {
       let chips = chipData;
-      console.log(chips);
       chips.splice(chipToDelete,1);
       setChipData(chips);
     };
 
     const handleClickOpen = () => {
-      setError(false);
+      setError(true);
       setChipData([
         {
           name:'with You &',

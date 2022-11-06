@@ -77,18 +77,18 @@ export default function AddFriend({group}) {
       if(chipData.includes(data) || data===null || data==='' || data===' '){
         setError(false);
         return
-      }
-      const check = await userExist(data);
-      console.log(check);
-      if(check && !group.members.includes(check._id) ){
-        setError(true);
-        const obj = {name:check.name,uid:check._id}
-        setChipData([...chipData,obj])
       }else{
-        console.log("inside");
-        setError(false);
+
+        const check = await userExist(data);
+        if(check && !group.members.includes(check._id) ){
+          setError(true);
+          const obj = {name:check.name,uid:check._id}
+          setChipData([...chipData,obj])
+        }else{
+          setError(false);
+        }
+        setData('')
       }
-      setData('')
     }
 
     const handleDelete = (chipToDelete) => () => {
@@ -123,7 +123,7 @@ export default function AddFriend({group}) {
 
   return (
     <div>
-         <Button onClick={handleClickOpen} style={{color:'white'}}>add+</Button>
+         {/* <Button onClick={handleClickOpen} style={{color:'white'}}>add+</Button> */}
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" className="modal_nav nav__text">Add Friend</DialogTitle>
         <DialogContent style={{width:'30rem'}}>

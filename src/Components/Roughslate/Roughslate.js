@@ -362,7 +362,7 @@ export default function Roughslate() {
                 />
               </div>
               <div className="inner_box_control_btn ">
-                <SettleUp className="settleup" groupMembers={groupMembers} settleup={settleup} transaction={transaction} id={id}/>
+                {/* <SettleUp className="settleup" groupMembers={groupMembers} settleup={settleup} transaction={transaction} id={id}/> */}
               </div>
             </div>
           </div>

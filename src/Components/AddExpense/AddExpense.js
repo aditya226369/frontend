@@ -39,7 +39,7 @@ export default function AddExpense({groupMembers,addtransaction,fetched,isId,gro
   const handleChangePaidBy = (e) => {
     e.preventDefault();
     const newvalue = e.target.value;
-    const newname = e.target.value;
+    const newname = e.target.name;
     setPaidBy([newname,newvalue]);
   };
 
@@ -91,16 +91,20 @@ export default function AddExpense({groupMembers,addtransaction,fetched,isId,gro
     handleAppends("amount", evil(expense.amount));
   };
   
+  const getIdx=()=>{
+    for(let i=0;i<groupMembers[1].length;i++){
+      if(groupMembers[1][i][1] === paidBy[1]){
+        return i;
+      }
+    }
+  }
   
   const handleSave = (e) => {
     e.preventDefault();
     const idxPaidBy = paidBy[0];
-    console.log(idxPaidBy);
     const split = parseInt(expense.amount) / groupMembers[1].length;
-    console.log(split);
-    const arr = new Array(groupMembers.length).fill(split);
-    console.log(arr);
-    const ft = [idxPaidBy,arr];
+    const arr = new Array(groupMembers[1].length).fill(split);
+    const ft = [getIdx(),arr];
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     addtransaction({
       label: expense.label,
@@ -221,6 +225,7 @@ export default function AddExpense({groupMembers,addtransaction,fetched,isId,gro
                           <Select
                             fullWidth
                             value={paidBy[1]}
+                            name={paidBy[0]}
                             variant="outlined"
                             onChange={handleChangePaidBy}
                             IconComponent={CreateIcon}
