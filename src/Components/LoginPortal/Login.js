@@ -22,8 +22,8 @@ export default function LoginPortal() {
     message: "",
   });
   const [user, setUser] = useState({
-    email: "",
-    password: "",
+    email: "pestoproject@gmail.com",
+    password: "1111111",
   });
   // const [error,setError] = useState(""); //shows error message if login failed
   let navigate = useNavigate();
@@ -56,7 +56,6 @@ export default function LoginPortal() {
   const postData = async (e) => {
     e.preventDefault();
     const { email, password } = user;
-    console.log(email);
     if (!email || !password) {
       setError({ flag: false, message: "Enter the required fields" });
     } else {
@@ -177,7 +176,7 @@ export default function LoginPortal() {
                     </Button>
                     <Grid className={classes.footer_link}>
                       <Link href="/register" variant="body2">
-                        Don't have an account? Sign in
+                        Don't have an account? Sign up
                       </Link>
                     </Grid>
                   </form>

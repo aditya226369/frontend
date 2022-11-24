@@ -123,7 +123,6 @@ export default function AddExpense({groupMembers,addtransaction,fetched,isId,gro
     })
   };
 
-  console.log(groupMembers);
   return (
     <div>
       <Button

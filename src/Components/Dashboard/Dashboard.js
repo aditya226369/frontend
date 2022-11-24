@@ -307,7 +307,6 @@ export default function Dashboard() {
 
   const addTransactionToDB=async({ gid, fromTo, amount, description, label, date })=>{
     try{
-
       const res = await fetch(backendurl+"/transaction/add",{
         method:"POST",
         headers:{
@@ -346,7 +345,8 @@ export default function Dashboard() {
     }
   }
 
-  const addtransaction=async(label,description,date,fromTo,amount)=>{
+  const addtransaction=async({label,description,date,fromTo,amount})=>{
+    console.log(label+" "+description+" "+date+" "+fromTo+" "+amount);
     const newTransactionArr = [...transaction.transactions,{label,description,date,fromTo,amount}];
     const pushTransaction  = await addTransactionToDB({ gid:group[isId].gid, fromTo:fromTo, amount:amount, description:description, label:label, date:date });
     if(pushTransaction){
