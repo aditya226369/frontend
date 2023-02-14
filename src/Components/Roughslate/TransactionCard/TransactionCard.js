@@ -6,21 +6,19 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 
 function TransactionCard({ transaction,groupMembers }) {
-  console.log(groupMembers);
   return (
     <div className={classes.transaction_container}>
       <Table style={{ width: "100%" }}>
+        <TableBody>
         <TableRow className={classes.head}>
             <TableCell>LABEL</TableCell>
             <TableCell>DESCRIPTION</TableCell>
             <TableCell>AMOUNT</TableCell>
-            <TableCell>FROM</TableCell>
-            <TableCell>TO</TableCell>
+            <TableCell>PAID BY</TableCell>
+            <TableCell>SHARED BETWEEN</TableCell>
             <TableCell>DATE</TableCell>
         </TableRow>
-        <TableBody>
           {(transaction.transactions).length > 0 && transaction.transactions.map((item, index) => {
-            console.log(item);
             const toArr=[];
             for(let i=0;i<item.fromTo[1].length;i++){
               if(item.fromTo[1][i] >0 ){

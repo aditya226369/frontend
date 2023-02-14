@@ -9,41 +9,30 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CreateIcon from "@material-ui/icons/Create";
 import classes from "./AddExpense.module.css";
+import Divide from './Divide';
 
 export default function AddExpense({ groupMembers, addtransaction }) {
   const before = new Array(groupMembers.length).fill(0);
   const [open, setOpen] = React.useState(false);
-  const [label, setLabel] = React.useState("Food");
   const [paidBy, setPaidBy] = React.useState("");
   const [split, setSplit] = React.useState("equal");
   const [checkAmount, setCheckAmount] = React.useState([0, 0]);
-  const [calAmount, setCalAmount] = React.useState(0);
+  const [shareAmount, setShareAmount] = React.useState({});
+  const [showAmountMessage,setShowAmountMessage] = React.useState(false);
   const [expense, setExpense] = React.useState({
-    label: "Food",
+    label: "",
     description: "",
     date: "",
     fromTo: [0, []],
-    amount: 0,
+    amount: '',
   });
-  console.log(expense);
-  console.log(groupMembers);
-  console.log(checkAmount);
-
-  React.useEffect(()=>{
-    setExpense({
-      label: "Food",
-      description: "",
-      date: "",
-      fromTo: [0, []],
-      amount: 0,
-    })
-  },[]);
+    
   const handleChangePaidBy = (e) => {
     e.preventDefault();
     const newname = e.target.value;
-    console.log(newname);
     setPaidBy(newname);
   };
 
@@ -70,7 +59,7 @@ export default function AddExpense({ groupMembers, addtransaction }) {
       description: field === "description" ? value : expense.description,
       date: field === "date" ? value : expense.date,
       fromTo: field === "fromTo" ? value : expense.fromTo,
-      amount: field === "amount" ? value : expense.amount,
+      amount: field === "amount" ? value : parseInt(expense.amount) || 0,
     };
     setExpense(makeObj);
   };
@@ -88,41 +77,43 @@ export default function AddExpense({ groupMembers, addtransaction }) {
       handleAppends("amount", amt);
     }
   };
+
+  const handleFocus=(e)=>{
+    e.preventDefault();
+    setShowAmountMessage(true);
+  }
+
   function evil(fn) {
     return new Function("return " + fn)();
   }
   const handleCal = (e) => {
     e.preventDefault();
     handleAppends("amount", evil(expense.amount));
+    setShowAmountMessage(false);
   };
   const handleChangeCal = (e) => {
     e.preventDefault();
     const splitType = e.target.value;
     setSplit(splitType);
   };
-  const handleInputAmount = (idx, e) => {
-    e.preventDefault();
-    const data = e.target.value || 0;
-    let sum = 0;
-    let newAmount = checkAmount;
-    newAmount[idx] = newAmount[idx] + data;
-    setCheckAmount(newAmount);
-    console.log(newAmount);
-    for (let i in newAmount) {
-      sum += newAmount[i].target.value;
-    }
 
-    setCalAmount(sum);
-  };
+  const addDataInSetShareAmount=(sharedData)=>{
+    setShareAmount(sharedData);
+  }
 
   const handleSave = (e) => {
     e.preventDefault();
     const idxPaidBy = groupMembers.indexOf(paidBy);
-    console.log(idxPaidBy);
-    const split = parseInt(expense.amount / groupMembers.length);
-    console.log(split);
-    const arr = new Array(groupMembers.length).fill(split);
-    console.log(arr);
+    let arr;
+    if(split==="equal"){
+      const spliting = parseInt(expense.amount / groupMembers.length);
+      arr = new Array(groupMembers.length).fill(spliting);
+    }else{
+      arr = [];
+      for(let i of shareAmount.friends){
+        arr.push(i.amt);
+      }
+    }
     const ft = [idxPaidBy,arr];
     const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
     addtransaction({
@@ -141,8 +132,6 @@ export default function AddExpense({ groupMembers, addtransaction }) {
       amount: 0,
     })
   };
-
-  console.log(checkAmount);
   return (
     <div>
       <Button
@@ -168,13 +157,11 @@ export default function AddExpense({ groupMembers, addtransaction }) {
         </DialogTitle>
         <DialogContent
           className={classes.dialog}
-          style={{ overflowY: "visible" }}
         >
           <DialogContentText component={'div'}>
             <div className={classes.content_text}>
               <Box
                 sx={{
-                  marginTop: 8,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -183,6 +170,7 @@ export default function AddExpense({ groupMembers, addtransaction }) {
                 <Box component="form" sx={{ mt: 3 }}>
                   <div className={classes.table_div}>
                     <table className={classes.table}>
+                    <tbody>
                       <tr>
                         <td>Label</td>
                         <td>
@@ -196,11 +184,29 @@ export default function AddExpense({ groupMembers, addtransaction }) {
                             fullWidth
                           >
                             <MenuItem value={"Food"}>Food</MenuItem>
-                            <MenuItem value={"Groccery"}>Groccery</MenuItem>
+                            <MenuItem value={"Grocery"}>Grocery</MenuItem>
                             <MenuItem value={"Electric"}>Electric</MenuItem>
                             <MenuItem value={"Trip"}>Trip</MenuItem>
                             <MenuItem value={"Petrol"}>Petrol</MenuItem>
+                            <MenuItem value={"other"}>Other</MenuItem>
                           </Select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Description</td>
+                        <td>
+                          <TextField
+                            className={classes.Textfield}
+                            required
+                            fullWidth
+                            id="description"
+                            name="description"
+                            value={expense.description}
+                            type="text"
+                            variant="outlined"
+                            autoComplete="description"
+                            onChange={handleDescription}
+                          />
                         </td>
                       </tr>
                       <tr>
@@ -212,6 +218,7 @@ export default function AddExpense({ groupMembers, addtransaction }) {
                             name="amount"
                             type="text"
                             value={expense.amount}
+                            onFocus={handleFocus}
                             onChange={handleAmount}
                             onBlur={handleCal}
                             InputProps={{ inputProps: { min: 1 } }}
@@ -219,6 +226,7 @@ export default function AddExpense({ groupMembers, addtransaction }) {
                             variant="outlined"
                             autoComplete="amount"
                           />
+                          { showAmountMessage && <div style={{display:'flex',alignItems:'center'}}><InfoOutlinedIcon style={{fontSize:'14px'}}/><span style={{fontSize:'10px'}}><i>You can also use arithmetic functions ( + - * / )</i></span></div>}
                         </td>
                       </tr>
                       <tr>
@@ -244,8 +252,7 @@ export default function AddExpense({ groupMembers, addtransaction }) {
                       <tr>
                         <td>Split</td>
                         <td>
-                          Equally
-                          {/* <Select
+                          <Select
                             fullWidth
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -256,29 +263,22 @@ export default function AddExpense({ groupMembers, addtransaction }) {
                           >
                             <MenuItem value={"equal"}>EQUAL</MenuItem>
                             <MenuItem value={"unequal"}>UNEQUAL</MenuItem>
-                            <MenuItem value={"percentage"}>PERCENTAGE</MenuItem>
-                          </Select> */}
+                            {/* <MenuItem value={"percentage"}>PERCENTAGE</MenuItem> */}
+                          </Select>
                         </td>
                       </tr>
-                      <tr>
-                        <td>Description</td>
-                        <td>
-                          <TextField
-                            className={classes.Textfield}
-                            required
-                            fullWidth
-                            id="description"
-                            name="description"
-                            value={expense.description}
-                            type="text"
-                            variant="outlined"
-                            autoComplete="description"
-                            onChange={handleDescription}
-                          />
-                        </td>
-                      </tr>
+                      
+                      </tbody>
                     </table>
                   </div>
+                  {split==="unequal" &&
+                    <fieldset style={{textAlign:'center',borderColor:'lightBlue',color:'blue'}}>
+                    <legend>
+                    <span>Shares of Group Members</span>
+                    </legend>
+                    <Divide groupMembers={groupMembers} amount={expense.amount} setShareAmount={addDataInSetShareAmount}/>
+                    </fieldset>
+                  }
                 </Box>
               </Box>
             </div>

@@ -1,8 +1,6 @@
 import React from "react";
 import classes from "./SimplifyCard.module.css";
 function SimplifyCard({ groupMembers, transaction }) {
-    console.log(transaction);
-    console.log(groupMembers);
 
   return (
     <>

@@ -155,7 +155,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Roughslate() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [expanded, setExpanded] = React.useState(false);
   const [groupMembers, setGroupMembers] = React.useState([]);
   const [id, setId] = React.useState(0);
@@ -183,13 +183,14 @@ export default function Roughslate() {
     setOpen(false);
   };
   useEffect(() => {
-    setExpanded("panel4");
+    // setExpanded("panel4");
+
+
   }, []);
 
   const deleteMembers = (text,idx) => {
     if(transaction.showAmount[0][idx][0] === 0 && transaction.showAmount[0][idx][1] === 0){
       const newMembers = groupMembers.filter((item) => item !== text);
-      console.log(newMembers);
       setGroupMembers(newMembers);
     }else{
       const name = (groupMembers[idx] === groupMembers[id]) ? "You" : groupMembers[idx];
@@ -198,7 +199,7 @@ export default function Roughslate() {
   };
 
   const addMembers = (arr) => {
-    const newmembers = [...groupMembers, ...arr];
+    const newmembers = [...groupMembers, arr.toUpperCase()];
     setGroupMembers(newmembers);
   };
 
@@ -211,16 +212,13 @@ export default function Roughslate() {
       body: JSON.stringify({fromTo:fromTo,showAmount:showamount,simplified:simplified,amount:amount})
     });
     const data = await res.json();
-    console.log(data);
     return data;
   };
 
   const addtransaction = async({ label, description, date, fromTo, amount }) => {
     let showamount = transaction.showAmount === 0 ? (new Array(groupMembers.length).fill(new Array(2).fill(0))) : (transaction.showAmount);
     const append = [...transaction.transactions,{ label, description, date, fromTo, amount }];
-    console.log(append);
     const arr = await getSimplified(fromTo,showamount,transaction.simplified,amount);
-    console.log(arr);
     const updateTransaction = await {
       simplified: arr.simplified,
       showAmount: arr.showAmount,
@@ -231,7 +229,6 @@ export default function Roughslate() {
 
   const onClickFriend=(idx,e)=>{
     e.preventDefault();
-    console.log(transaction);
     if(transaction.showAmount === 0){
       alert(`No transaction for ${groupMembers[idx]}`);
     }else if(transaction.showAmount[idx] === undefined){
@@ -245,7 +242,6 @@ export default function Roughslate() {
     let sa = transaction.showAmount;
     let simple = transaction.simplified;
   }
-  console.log(transaction.showAmount);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -294,7 +290,7 @@ export default function Roughslate() {
           <div className="drawer_collection">
             <div>Friends</div>
             <div className="drawer_add" style={{ cursor: "pointer" }}>
-              <AddFriend groupMembers={addMembers} />
+              <AddFriend groupMembers={addMembers} members={groupMembers}/>
             </div>
           </div>
           <List>
