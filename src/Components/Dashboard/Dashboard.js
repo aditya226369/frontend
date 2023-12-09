@@ -186,10 +186,10 @@ export default function Dashboard() {
         body: JSON.stringify(fetched),
       });
       if (res.status !== 200) {
-        console.log(res);
+        // console.log(res);
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       navigate("/login");
     }
   };
@@ -215,7 +215,7 @@ export default function Dashboard() {
         return false;
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return false;
     }
   };
@@ -253,7 +253,7 @@ export default function Dashboard() {
       const response = await getTransaction.json();
       return response;
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return false;
     }
   };
@@ -272,7 +272,7 @@ export default function Dashboard() {
       const response = await getGroup.json();
       await gettingGroupMembersIntoArray(response);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
   const callDashboardPage = async () => {
@@ -295,7 +295,7 @@ export default function Dashboard() {
       setFetched(data);
       await fetchgroupFromUid(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       navigate("/login");
     }
   };
@@ -320,7 +320,7 @@ export default function Dashboard() {
         return false;
       }
     }catch(e){
-      console.log(e);
+      // console.log(e);
       return false;
     }
   }
@@ -340,7 +340,7 @@ export default function Dashboard() {
         return false;
       }
     }catch(e){
-      console.log(e);
+      // console.log(e);
       return false;
     }
   }
@@ -377,11 +377,11 @@ export default function Dashboard() {
   };
 
   const onClickGroupButton = async (idx, e) => {
-    console.log(group[idx].gid);
+    // console.log(group[idx].gid);
     setGroupMembers([group[idx], group[idx].members]);
     const res = await fetchTransactionFromgid(group[idx].gid);
-    console.log(res);
-    console.log(transaction);
+    // console.log(res);
+    // console.log(transaction);
     if(res){
       const indexOfUser = group[idx].members[0].indexOf(fetched._id);
       setId(indexOfUser);
