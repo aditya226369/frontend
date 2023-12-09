@@ -1,8 +1,8 @@
 import React from "react";
 import classes from "./SimplifyCard.module.css";
 function SimplifyCard({ groupMembers,isId, transaction }) {
-    console.log(transaction);
-    console.log((transaction.transactions).length);
+    // console.log(transaction);
+    // console.log((transaction.transactions).length);
   return (
     <>
       <div className={classes.board_title}>
